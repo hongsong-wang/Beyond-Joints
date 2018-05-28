@@ -98,7 +98,7 @@ class construct_model(object):
         self._num_joints = num_joints
         self._num_class = num_class
 
-    def base_model(self, rotate=False, sub_mean=False, full_rnn=False):
+    def base_model(self, rotate=False, sub_mean=False):
         '''
         use stacked two layers as baseline, use stacked three layers later
         '''
@@ -126,17 +126,11 @@ class construct_model(object):
         # out = SpatialDropout1D(0.05)(out)
         out = Bidirectional(LSTM(512, return_sequences=True))(out)
 
-        if full_rnn:
-            # LSTM, GRU, SimpleRNN
-            prob = Bidirectional(SimpleRNN(self._num_class, return_sequences=True), merge_mode='ave' )(out)
-            prob = Lambda(lambda x:T.max(x, axis=1), output_shape=lambda s: (s[0], s[2]))(prob)
-            prob = Activation('softmax')(prob)
-        else:
-            out = Lambda(lambda x:T.max(x, axis=1), output_shape=lambda s: (s[0], s[2]))(out)
-            # out = BatchNormalization()(out)
-            out = Dropout(0.5)(out)
-            out = Activation('relu')(out)
-            prob = Dense(self._num_class, activation='softmax')(out)
+        out = Lambda(lambda x:T.max(x, axis=1), output_shape=lambda s: (s[0], s[2]))(out)
+        # out = BatchNormalization()(out)
+        out = Dropout(0.5)(out)
+        out = Activation('relu')(out)
+        prob = Dense(self._num_class, activation='softmax')(out)
 
         model = Model(skt_input, prob)
         opt = SGD(lr=self._param['base_learn_rate'], decay=self._param['weight_regular'], momentum=0.9, nesterov=True)
@@ -168,7 +162,7 @@ class construct_model(object):
         return group_list
 
     def train_model(self):
-        model = self.base_model(rotate=False, sub_mean=False, full_rnn=False)
+        model = self.base_model(rotate=False, sub_mean=False )
 
         db = cmu_mocap(self._param['data_path'])
         if self._param['subset']:
