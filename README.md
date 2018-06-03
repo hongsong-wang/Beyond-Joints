@@ -13,3 +13,7 @@ We follow the experimental setup of this paper, Cooccurrence Feature Learning fo
 
 ## Action Detection on PKU-MMD
 The dataset [[PKU-MMD repository]](https://github.com/ECHO960/PKU-MMD). You can only download the skeletons. The main data processing is the function **load_seq_lst** in **classify_pertime.py**. During training, we only sample sub-squences with length of 200 around the action intervals. It seems this step is a bit important for fast training, when compared with random sampling.
+
+## Contact 
+For any question, feel free to contact:
+Hongsong Wang, hongsong.wang@nlpr.ia.ac.cn
