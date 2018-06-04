@@ -375,9 +375,10 @@ class construct_model(object):
                 if epoch % 4==0 and epoch > 0:
                     save_file = save_path + ('_epoch%d.h5' % epoch)
                     save_hdf5(model, save_file)
-                if epoch % 2==0:
+                if epoch % 4==0 and epoch > 50:
+                    gt_dict = {}
+                    res_dict = {}
                     prob_val = model.predict(valX, batch_size=batchsize, verbose=0)
-                    precision, recall, f1 = 0, 0, 0
                     count = 0
                     for idx, vid_name in zip(self.group_list, self.vid_list_uqk):
                         prob_seq = np.zeros((np.max(val_start_list[idx]) + num_seq, num_class))
@@ -386,16 +387,15 @@ class construct_model(object):
                                 prob_seq[val_start_list[idx2]:val_start_list[idx2]+num_seq] + prob_val[idx2]
                         prob_seq = normalize(prob_seq, axis=1, norm='l1')
                         labels = label_map[vid_name]
-                        
                         pred_labels = get_interval_frm_frame_predict(prob_seq)
-                        precision_per, recall_per, f1_per = detect_precision_recall(labels, pred_labels)
                         
-                        precision = precision + precision_per
-                        recall = recall + recall_per
-                        f1 = f1 + f1_per
-                        count = count + 1
-                    cmd_str = 'epoch: %d, learn_rate=%f, average precision: %f, recall: %f, F1 score: %f' % \
-                        (epoch, K.get_value(model.optimizer.lr), precision/count, recall/count, f1/count)
+                        gt_dict[vid_name] = labels
+                        res_dict[vid_name] = pred_labels
+                        
+                    metrics = eval_detect_mAP(gt_dict, res_dict, minoverlap=0.5)
+                    map = metrics['map']
+                    cmd_str = 'epoch: %d, learn_rate=%f, map: %f' % \
+                              (epoch, K.get_value(model_train.optimizer.lr), map)
                     print cmd_str
                     if write_file:
                         fid_out.write(cmd_str + '\n')
