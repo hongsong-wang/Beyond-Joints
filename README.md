@@ -2,6 +2,8 @@
 **Hongsong Wang**, Liang Wang. Beyond Joints: Learning Representations from Primitive Geometries for Skeleton-based Action Recognition and Detection. IEEE Transactions on Image Processing (**TIP 2018**), vol. 27, no. 9, pp. 4382-4394.
 [[Published article]](https://ieeexplore.ieee.org/document/8360391/) 
 
+Our codebase is based on Keras with Theano backend.
+
 ## Action Recognition on NTU RGB+D
 Please read this [[ntu rgb+d repository]](https://github.com/shahroudy/NTURGB-D) and download the dataset by following this [[instruction]](http://rose1.ntu.edu.sg/Datasets/actionRecognition.asp). You can only download the skeletons of this dataset.
 
