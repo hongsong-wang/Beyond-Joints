@@ -18,4 +18,4 @@ The dataset [[PKU-MMD repository]](https://github.com/ECHO960/PKU-MMD). You can 
 
 ## Contact 
 For any question, feel free to contact:
-Hongsong Wang, hongsong.wang@nlpr.ia.ac.cn
+Hongsong Wang, hongsongsui@gmail.com
